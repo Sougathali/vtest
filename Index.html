@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Running Line Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="600" height="400"></canvas>
+
+    <script>
+        // Sample data
+        const limitValue = 30;
+        var data = {
+            labels: [],
+            datasets: [{
+                label: 'X-Axis',
+                borderColor: 'Blue',
+                data: [],
+                fill: false,
+            },
+            {
+                label: 'Y-Axis',
+                borderColor: 'violet',
+                data: [],
+                fill: false,
+                },
+            {
+                label: 'Z-Axis',
+                borderColor: 'Green',
+                data: [],
+                fill: false,
+                },
+            {
+                        label: 'Limitation Line',
+                        data: Array(5).fill(limitValue),
+                        borderColor: 'Red',
+                        borderWidth: 1,
+                        borderDash: [5, 5], // Make it dashed
+                        fill: false,
+                    },]
+        };
+
+        // Chart configuration
+        var config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: [{
+                        type: 'linear',
+                        position: 'bottom'
+                    }],
+                    y: [{
+                        type: 'linear',
+                        position: 'left'
+                    }]
+                }
+            }
+        };
+
+        // Create the chart
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, config);
+
+        // Function to add a random data point
+        var Seconds = 0;
+        function addData() {
+            var Line1 = Math.random() * 100;
+            var Line2 = Math.random() * 100;
+            var Line3 = Math.random() * 100;
+
+            Seconds = Seconds + 1;
+            
+            data.labels.push(Seconds);
+            data.datasets[0].data.push(Line1);
+            data.datasets[1].data.push(Line2);
+            data.datasets[2].data.push(Line3);
+
+            // Remove the first data point if there are more than 5 points
+            if (data.labels.length > 20) {
+                data.labels.shift();
+                data.datasets[0].data.shift();
+                data.datasets[1].data.shift();
+                data.datasets[2].data.shift();
+
+
+                //add
+                data.labels.push(Seconds);
+                data.datasets[0].data.push(Line1);
+                data.datasets[1].data.push(Line2);
+                data.datasets[2].data.push(Line3);
+            }
+
+            
+
+            // Update the chart
+            myChart.update();
+        }
+
+        // Add a new data point every second
+        setInterval(addData, 800);
+    </script>
+</body>
+</html>
